@@ -122,7 +122,7 @@ blockquote {
 	opacity: 1;
 }
 
-.ui button, .text-options button {
+.ui button, .text-options button, .tabs .add-tab {
 
 	-webkit-transition: opacity 400ms;
 	-moz-transition: opacity 400ms;
@@ -140,6 +140,67 @@ blockquote {
 	height: 32px;
 	width: 25px;
 	border: 0px;
+}
+
+.tabs {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: auto;
+    width: 50px;
+}
+
+.tabs button.tab {
+    border: 1px solid #ddd;
+    border-right: 0;
+    background-color: transparent;
+    display: block;
+    font-family: 'Lora', serif;
+    color: #333;
+    font-size: 16px;
+    padding: 5px 0 5px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    opacity: 0.25;
+    width: 150px;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    transition: transform 250ms linear, opacity 250ms linear;
+}
+
+.yang .tabs button.tab {
+	color: #bbb;
+}
+
+.tabs button.tab:hover {
+	transform: translateX(-100px);
+	opacity: 0.9;
+}
+.tabs button.tab.current {
+	transforM: translateX(-80px);
+	opacity: 0.7;
+}
+
+.tabs button.tab span {
+	vertical-align: middle;
+	max-width: 115px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	float: left;
+	display: inline-block;
+}
+
+.tabs button.tab-remove {
+	vertical-align: top;
+	border: 0;
+	background: none;
+	font-size: 16px;
+	color: #bbb;
+	float: right;   
+	position: relative;
+    top: -2px;
 }
 
 a {

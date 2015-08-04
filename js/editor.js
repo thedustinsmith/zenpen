@@ -8,7 +8,7 @@ ZenPen.editor = (function() {
 	// Editor Bubble elements
 	var textOptions, optionsBox, boldButton, italicButton, quoteButton, urlButton, urlInput;
 
-	var composing;
+	var composing, currentTab;
 
 	function init() {
 
@@ -70,7 +70,6 @@ ZenPen.editor = (function() {
 		document.addEventListener( 'compositionstart', onCompositionStart );
 		document.addEventListener( 'compositionend', onCompositionEnd );
 	}
-
 
 	function bindElements() {
 
@@ -219,13 +218,16 @@ ZenPen.editor = (function() {
 	}
 
 	function saveState( event ) {
-		
-		localStorage[ 'header' ] = headerField.innerHTML;
-		localStorage[ 'content' ] = contentField.innerHTML;
+		var savePrepend = '';
+		if ( currentTab ) {
+			savePrepend = currentTab + '.';
+		}
+		localStorage[ savePrepend + 'header' ] = headerField.innerHTML;
+		localStorage[ savePrepend + 'content' ] = contentField.innerHTML;
 	}
 
 	function loadState() {
-
+		currentTab = null;
 		if ( localStorage[ 'header' ] ) {
 			headerField.innerHTML = localStorage[ 'header' ];
 		}
@@ -233,6 +235,43 @@ ZenPen.editor = (function() {
 		if ( localStorage[ 'content' ] ) {
 			contentField.innerHTML = localStorage[ 'content' ];
 		}
+	}
+
+	function loadTab( tabId ) {
+		currentTab = tabId;
+		if ( localStorage[ tabId + '.header'] ) {
+			headerField.innerHTML = localStorage[ tabId + '.header' ];
+		}
+		else {
+			headerField.innerHTML = 'New Tab';
+		}
+
+		if ( localStorage[ tabId + '.content'] ) {
+			contentField.innerHTML = localStorage[ tabId + '.content' ];
+		}
+		else {
+			contentField.innerHTML = 'Enter your new tab content here';
+		}
+	}
+
+	function generateId () {
+	    var id = "",
+	    	possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+	    for ( var i = 0; i < 5; i++ )
+	        id += possible.charAt(Math.floor(Math.random() * possible.length));
+
+	    return id;
+	};
+	function addTab () {
+		var tabs = JSON.parse(localStorage[ 'tabs' ] || '[]'),
+			newId = generateId();
+
+		tabs.push(newId);
+		localStorage[ newId + '.header' ] = '(' + (tabs.length) + ') New Tab';
+		loadTab(newId);
+		localStorage[ 'tabs' ] = JSON.stringify(tabs);
+		return newId;
 	}
 
 	function onBoldClick() {
@@ -353,7 +392,9 @@ ZenPen.editor = (function() {
 	return {
 		init: init,
 		saveState: saveState,
-		getWordCount: getWordCount
+		getWordCount: getWordCount,
+		loadTab: loadTab,
+		addTab: addTab
 	}
 
 })();

@@ -8,6 +8,9 @@ ZenPen.ui = (function() {
 	// Buttons
 	var screenSizeElement, colorLayoutElement, targetElement, saveElement;
 
+	// Tabs
+	var addTabElement, tabsElement, tabs;
+
 	// Word Counter
 	var wordCountValue, wordCountBox, wordCountElement, wordCounter, wordCounterProgress;
 	
@@ -54,6 +57,12 @@ ZenPen.ui = (function() {
 			darkLayout = !darkLayout;
 		}
 
+		if ( localStorage['tabs'] ) {
+			tabs = JSON.parse(localStorage['tabs']);
+			tabs.forEach(function (t) {
+				appendTab(t);
+			});
+		}
 	}
 
 	function saveState() {
@@ -122,6 +131,76 @@ ZenPen.ui = (function() {
 
 		header = document.querySelector( '.header' );
 		header.onkeypress = onHeaderKeyPress;
+
+		tabsElement = document.querySelector( '.tabs' );
+		tabsElement.onclick = onTabClick;
+		addTabElement = document.querySelector( '.add-tab' );
+		addTabElement.onclick = onAddTabClick;
+	}
+
+	function onTabClick ( event ) {
+		var target = event.target,
+			tabId;
+
+		// clicked on the span not on the button
+		if (!target.matches('button')) {
+			target = target.parentNode;
+		}
+
+
+		if ( target.hasAttribute('data-tabid') ) {
+			tabId = target.getAttribute('data-tabid');
+			ZenPen.editor.loadTab(tabId);
+			[].forEach.call(target.parentNode.childNodes, function (n) { 
+				if ( n.classList ) {
+					n.classList.remove('current'); 
+				}
+			});
+			target.classList.add('current');
+		}
+
+		if ( target.classList.contains('tab-remove')) {
+			target = target.parentNode;
+			removeTab(target.getAttribute('data-tabid'));
+		}
+	}
+
+	function onAddTabClick( event ) {
+		var newTab = ZenPen.editor.addTab(),
+			btn = appendTab( newTab );
+
+		[].forEach.call(btn.parentNode.childNodes, function (n) { 
+			if ( n.classList ) {
+				n.classList.remove('current'); 
+			}
+		});
+		btn.classList.add('current');
+	};
+
+	function appendTab ( tabId ) {
+		var tabBtn = document.createElement('button'),
+			title = localStorage[tabId + '.header' ];
+
+		tabsElement.appendChild(tabBtn);
+		tabBtn.setAttribute('data-tabid', tabId);
+		tabBtn.setAttribute('title', title);
+		tabBtn.classList.add('tab');
+		tabBtn.innerHTML = '<span>' + title + '</span>' + 
+			'<button class="tab-remove">x</button>';
+
+		return tabBtn;
+	}
+
+	function removeTab ( tabId ) {
+		var ix = tabs.indexOf(tabId),
+			tabClone = tabs.slice(0),
+			savePrepend = tabId + '.';
+
+		tabClone.slice(ix, ix + 1);
+		localStorage.removeItem(savePrepend + 'header');
+		localStorage.removeItem(savePrepend + 'content');
+		localStorage['tabs'] = JSON.stringify(tabClone);
+		document.querySelector('button[data-tabid="' + tabId + '"]').remove();
 	}
 
 	function onScreenSizeClick( event ) {
