@@ -224,6 +224,7 @@ ZenPen.editor = (function() {
 		}
 		localStorage[ savePrepend + 'header' ] = headerField.innerHTML;
 		localStorage[ savePrepend + 'content' ] = contentField.innerHTML;
+		ZenPen.ui.tabTitleChange(currentTab, headerField.innerHTML);
 	}
 
 	function loadState() {

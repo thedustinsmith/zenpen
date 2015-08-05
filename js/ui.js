@@ -37,6 +37,10 @@ ZenPen.ui = (function() {
 		console.log( "Checkin under the hood eh? We've probably got a lot in common. You should totally check out ZenPen on github! (https://github.com/tholman/zenpen)." );
 	}
 
+	function handleStorage ( event ) {
+		console.log('storage', event);
+	}
+
 	function loadState() {
 
 		// Activate word counter
@@ -163,6 +167,10 @@ ZenPen.ui = (function() {
 			target = target.parentNode;
 			removeTab(target.getAttribute('data-tabid'));
 		}
+	};
+
+	function tabTitleChange ( id, title ) {
+		findTabButton(id, 'span').innerText = title;
 	}
 
 	function onAddTabClick( event ) {
@@ -185,8 +193,8 @@ ZenPen.ui = (function() {
 		tabBtn.setAttribute('data-tabid', tabId);
 		tabBtn.setAttribute('title', title);
 		tabBtn.classList.add('tab');
-		tabBtn.innerHTML = '<span>' + title + '</span>' + 
-			'<button class="tab-remove">x</button>';
+		tabBtn.innerHTML = '<button class="tab-remove">x</button>' + 
+			'<span>' + title + '</span>';
 
 		return tabBtn;
 	}
@@ -200,7 +208,15 @@ ZenPen.ui = (function() {
 		localStorage.removeItem(savePrepend + 'header');
 		localStorage.removeItem(savePrepend + 'content');
 		localStorage['tabs'] = JSON.stringify(tabClone);
-		document.querySelector('button[data-tabid="' + tabId + '"]').remove();
+		findTabButton(tabId).remove();
+	}
+
+	function findTabButton ( id, child ) {
+		var sel = 'button[data-tabid="' + id + '"]';
+		if ( child ) {
+			sel += ' ' + child;
+		}
+		return document.querySelector(sel);
 	}
 
 	function onScreenSizeClick( event ) {
@@ -449,7 +465,8 @@ ZenPen.ui = (function() {
 	}
 
 	return {
-		init: init
+		init: init,
+		tabTitleChange: tabTitleChange
 	}
 
 })();

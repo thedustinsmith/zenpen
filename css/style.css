@@ -114,7 +114,7 @@ blockquote {
 	top: 0px;
 }
 
-.ui:hover button {
+.ui:hover button, .tabs:hover button.add-tab {
 	opacity: 0.4;
 }
 
@@ -150,6 +150,10 @@ blockquote {
     width: 50px;
 }
 
+.yang .tabs button.tab {
+	color: #bbb;
+}
+
 .tabs button.tab {
     border: 1px solid #ddd;
     border-right: 0;
@@ -158,7 +162,7 @@ blockquote {
     font-family: 'Lora', serif;
     color: #333;
     font-size: 16px;
-    padding: 5px 0 5px 10px;
+    padding: 5px 10px 5px 0px;
     cursor: pointer;
     white-space: nowrap;
     opacity: 0.25;
@@ -168,15 +172,10 @@ blockquote {
     text-overflow: ellipsis;
     transition: transform 250ms linear, opacity 250ms linear;
 }
-
-.yang .tabs button.tab {
-	color: #bbb;
+.tabs:hover > button {
+	opacity: ;
 }
 
-.tabs button.tab:hover {
-	transform: translateX(-100px);
-	opacity: 0.9;
-}
 .tabs button.tab.current {
 	transforM: translateX(-80px);
 	opacity: 0.7;
@@ -190,6 +189,9 @@ blockquote {
 	white-space: nowrap;
 	float: left;
 	display: inline-block;
+    transform: translateX(-15px);
+    transition: transform .2s;
+    transition-delay: .2s;
 }
 
 .tabs button.tab-remove {
@@ -198,9 +200,25 @@ blockquote {
 	background: none;
 	font-size: 16px;
 	color: #bbb;
-	float: right;   
+	float: left;   
 	position: relative;
     top: -2px;
+    opacity: 0;
+    transition: opacity .2s;
+    transition-delay: .4s;
+}
+
+.tabs button.tab:hover {
+	transform: translateX(-100px);
+	opacity: 0.9;
+}
+.tabs button.tab:hover span, 
+.tabs button.tab.current span {
+	transform: translateX(0);
+}
+.tabs button.tab:hover .tab-remove, 
+.tabs button.tab.current .tab-remove {
+	opacity: 1;	
 }
 
 a {
