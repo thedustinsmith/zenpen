@@ -170,7 +170,10 @@ ZenPen.ui = (function() {
 	};
 
 	function tabTitleChange ( id, title ) {
-		findTabButton(id, 'span').innerText = title;
+		var tabBtn = findTabButton(id, 'span');
+		if (tabBtn) {
+			tabBtn.innerText = title;
+		}
 	}
 
 	function onAddTabClick( event ) {
@@ -204,7 +207,8 @@ ZenPen.ui = (function() {
 			tabClone = tabs.slice(0),
 			savePrepend = tabId + '.';
 
-		tabClone.slice(ix, ix + 1);
+		tabClone.splice(ix, 1);
+		tabs = tabClone;
 		localStorage.removeItem(savePrepend + 'header');
 		localStorage.removeItem(savePrepend + 'content');
 		localStorage['tabs'] = JSON.stringify(tabClone);
